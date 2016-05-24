@@ -18,15 +18,17 @@ public class Client {
 
         WebTarget target = client.target(getBaseURI());
 
+        System.out.println(
+                System.getenv());
         String response = target.path("docker").
-                path("/containers/{id}/start").
+                path("/containers/get").
                 request().
                 accept(MediaType.APPLICATION_JSON).
                 get(Response.class)
                 .toString();
 
         String plainAnswer =
-                target.path("docker").path("/containers/{id}/start").request().accept(MediaType.APPLICATION_JSON).get(String.class);
+                "hoi";
 
 
         System.out.println(response);
@@ -34,7 +36,7 @@ public class Client {
     }
 
     private static URI getBaseURI() {
-        return UriBuilder.fromUri("http://localhost:8080/ictlab/").build();
+        return UriBuilder.fromUri("http://localhost:8080/ictlab/resources").build();
     }
 }
 

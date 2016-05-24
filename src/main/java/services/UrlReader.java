@@ -7,8 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 class UrlReader {
-
-    String readFromUrl(URL url) throws IOException {
+    public String readFromUrl(URL url) throws IOException {
         URLConnection urlConnection = url.openConnection();
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                 urlConnection.getInputStream()))) {

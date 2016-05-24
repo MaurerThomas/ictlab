@@ -10,7 +10,7 @@ import java.net.URL;
 
 @Path("/docker")
 public class GetAllContainersResource {
-    private UrlReader urlReader = new UrlReader();
+    private FailOver failOver = new FailOver();
 
     @GET
     @Path("/containers/get")
@@ -25,6 +25,6 @@ public class GetAllContainersResource {
 
     private String getAllContainers() throws IOException {
         URL url = new URL("http://localhost.nl");
-        return urlReader.readFromUrl(url);
+        return failOver.handleUrl(url);
     }
 }

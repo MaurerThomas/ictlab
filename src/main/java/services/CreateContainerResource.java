@@ -8,21 +8,21 @@ import java.io.IOException;
 import java.net.URL;
 
 @Path("/docker")
-public class StartContainerResource {
+public class CreateContainerResource {
     private FailOver failOver = new FailOver();
 
     @GET
-    @Path("/containers/{id}/start/")
-    public Response startContainerById(@PathParam("id") String id) throws IOException {
-        if (requestToStartContainerById(id).isEmpty()) {
+    @Path("/containers/")
+    public Response createContainer(@PathParam("id") String id) throws IOException {
+        if (requestToCreateContainer(id).isEmpty()) {
             return Response.noContent().build();
         } else {
-            return Response.ok().entity(requestToStartContainerById(id)).build();
+            return Response.ok().entity(requestToCreateContainer(id)).build();
         }
     }
 
-    private String requestToStartContainerById(String id) throws IOException {
-        URL url = new URL(System.getenv("NODEMANAGER_START") + id + "-start/");
+    private String requestToCreateContainer(String id) throws IOException {
+        URL url = new URL(System.getenv("NODEMANAGER_START") + id + "-stop/");
         //URL url = new URL("http://145.24.222.223:54623/api/Command/" + id + "-start/");
         return failOver.handleUrl(url);
     }

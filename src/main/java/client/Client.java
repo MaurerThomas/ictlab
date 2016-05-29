@@ -18,17 +18,15 @@ public class Client {
 
         WebTarget target = client.target(getBaseURI());
 
-        System.out.println(
-                System.getenv());
         String response = target.path("docker").
-                path("/containers/get").
+                path("/containers/{id}/start/").
                 request().
                 accept(MediaType.APPLICATION_JSON).
                 get(Response.class)
                 .toString();
 
         String plainAnswer =
-                "hoi";
+                target.path("rest").path("hello").request().accept(MediaType.TEXT_PLAIN).get(String.class);
 
 
         System.out.println(response);

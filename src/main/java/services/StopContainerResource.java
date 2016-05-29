@@ -14,14 +14,14 @@ public class StopContainerResource {
     @GET
     @Path("/containers/{id}/stop/")
     public Response stopContainerById(@PathParam("id") String id) throws IOException {
-        if (requestToStopContainerById(id).isEmpty()) {
+        if (requestToStopContainerById(id).getStatus() != 200) {
             return Response.noContent().build();
         } else {
             return Response.ok().entity(requestToStopContainerById(id)).build();
         }
     }
 
-    private String requestToStopContainerById(String id) throws IOException {
+    private Response requestToStopContainerById(String id) throws IOException {
         URL url = new URL(System.getenv("NODEMANAGER_START") + id + "-stop/");
         //URL url = new URL("http://145.24.222.223:54623/api/Command/" + id + "-start/");
         return failOver.handleUrl(url);

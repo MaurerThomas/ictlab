@@ -17,16 +17,16 @@ public class GetAllContainersResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response requestContainers() throws IOException {
 
-        if (getAllContainers().isEmpty()) {
+        if (getAllContainers().getStatus() != 200) {
             return Response.noContent().build();
         } else {
             return Response.ok().entity(getAllContainers()).build();
         }
     }
 
-    private String getAllContainers() throws IOException {
-        URL url = new URL(System.getenv("NODEMANAGER_ALL"));
-        //URL url = new URL("http://145.24.222.223:54623/api/containers");
+    private Response getAllContainers() throws IOException {
+        //URL url = new URL(System.getenv("NODEMANAGER_ALL"));
+        URL url = new URL("http://145.24.222.223:54623/api/containers");
         return failOver.handleUrl(url);
     }
 }

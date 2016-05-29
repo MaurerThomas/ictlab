@@ -1,35 +1,39 @@
 package services;
 
+
+import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.URL;
+import java.net.*;
 
 public class FailOver {
     private UrlReader urlReader = new UrlReader();
 
-    public String handleUrl(URL url) throws IOException {
+    public Response handleUrl(URL url) throws IOException {
         //All hosts
-        String[] allHosts = new String[]{System.getenv("NODEMANAGER_START")};
+        //URL[] allHosts = new URL[]{new URL(System.getenv("NODEMANAGER_START"))};
+        URL[] allHosts = new URL[]{new URL("http://145.24.222.223:54624")};
 
-        if (pingHost(url.toString(), 54623, 5000)) {
-            return urlReader.readFromUrl(url.toString());
+        if (pingHost(url)) {
+            return Response.ok().entity(urlReader.readFromUrl(url)).build();
         } else {
-            for (String newWorkingHost : allHosts) {
-                if (pingHost(newWorkingHost, 80, 50)) {
-                    return urlReader.readFromUrl(newWorkingHost);
+            for (URL newWorkingHost : allHosts) {
+                if (pingHost(newWorkingHost)) {
+                    return Response.ok().entity(urlReader.readFromUrl(newWorkingHost)).build();
                 }
             }
         }
-        return null;
+        return Response.noContent().build();
     }
 
-    private static boolean pingHost(String host, int port, int timeout) {
-        try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(host, port), timeout);
+    private static boolean pingHost(URL host) {
+        try{
+            final URLConnection connection = new URL(host.toString()).openConnection();
+            connection.connect();
             return true;
-        } catch (IOException e) {
-            return false; // Failed to reach host.
+        } catch(final MalformedURLException e){
+            throw new IllegalStateException("Error: Wrong URL " + host, e);
+        } catch(final IOException e){
+            return false;
         }
     }
 }

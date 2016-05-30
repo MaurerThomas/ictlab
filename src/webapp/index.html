@@ -17,6 +17,7 @@
             padding-left: 10px;
         }
     </style>
+
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top">
@@ -104,5 +105,135 @@
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var myTable = $('#myTable');
+
+         getContainers();
+
+         var myTableDataTable = myTable.DataTable({
+         "aoColumns": [
+             { "bSortable": false },
+             //{ "bSortable": false, "bVisible": false, "aTargets": [0] },
+             { "bSortable": true },
+             { "bSortable": true },
+             { "bSortable": false },
+             { "bSortable": false }
+         ],
+         "order": [[0, "asc"]]
+         });
+
+        $('.glyphicon-play').click(function () {
+            //Start container
+            alert("Clicked start");
+
+            var rowData = getRowData($(this));
+            var id = rowData[0];
+            var parentTableRow =  $(this).parents('tr');
+
+            var row = myTableDataTable.row(parentTableRow);
+
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: '@Url.Action("StartContainer", "Home")',
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data != "Could not start container") {
+                        parentTableRow.css("background-color", "yellow");
+                        rowData[2] = "Starting...";
+                    } else {
+                        parentTableRow.css("background-color", "red");
+                        rowData[2] = "Error";
+                    }
+
+                    row.data(rowData);
+                    myTableDataTable.draw();
+
+                }
+            });
+        });
+
+        $('.glyphicon-off').click(function () {
+            //Stop container
+            var data = getRowData($(this));
+            var id = data[0];
+
+            alert("Stop container " + id);
+        });
+
+        $('.glyphicon-repeat').click(function () {
+            //Restart container
+            var data = getRowData($(this));
+            var id = data[0];
+
+            alert("Restarting container " +id);
+        });
+
+        $('.glyphicon-cog').click(function () {
+            //Edit container
+            var data = getRowData($(this));
+            var containerName = data[1];
+            var containerState = data[2];
+
+            $("#containerName").val(containerName);
+            $("#containerState").val(containerState);
+
+            $('#myModal').modal('show');
+        });
+
+        $('.glyphicon-export').click(function () {
+            //Move container
+            var data = getRowData($(this));
+            var id = data[0];
+
+            alert("Moving container " + id);
+        });
+
+        $('#saveContainer').click(function () {
+            //Save container
+            alert("Saved container, will close this window now.");
+        });
+
+        $('#newContainer').click(function () {
+            //TODO: newContainer maken:
+            //Container name
+            //Container description
+            //Container image, vrije invoer.
+            //Starten op node: Lijst van nodes
+            alert("Creating container");
+        });
+
+        function getRowData(obj) {
+            var data = myTableDataTable.row(obj.parents('tr')).data();
+
+            return data;
+        }
+
+        function checkResults(id) {
+            //TODO: Elke 10 sec vragen aan Front-end API of container gestart is.
+        }
+
+        function getContainers() {
+            var host = window.location.origin;
+            //var url = host+"/resources/docker/containers/get";
+            var url = host+ "/containers.json";
+            $.getJSON(url, function(data){
+                $.each(data, function (index, value) {
+                    tableRow = $('<tr></tr>')
+
+                    $.each(value, function (index, value) {
+                        tableRow.append($('<td></td>').text(value));
+                    });
+
+                    tableRow.append('<td><span class="glyphicon glyphicon-dy glyphicon-play" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-toggle="tooltip" title="Move a container"></span></td>');
+                    myTable.append(tableRow);
+                });
+            });
+        }
+    });
+</script>
 </body>
 </html>

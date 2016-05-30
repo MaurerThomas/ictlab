@@ -1,0 +1,32 @@
+[
+    {
+      "id": 1,
+      "name": "containerOne",
+      "creationDate": "2016-03-21T08:37:00.000Z",
+      "state": "Stopped"
+    },
+    {
+      "id": 2,
+      "name": "containerTwo",
+      "creationDate": "2016-03-20T16:37:36.000Z",
+      "state": "Started"
+    },
+    {
+      "id": 3,
+      "name": "containerThree",
+      "creationDate": "2016-03-19T11:12:12.000Z",
+      "state": "Error"
+    },
+    {
+      "id": 4,
+      "name": "containerFour",
+      "creationDate": "2016-03-15T10:15:59.000Z",
+      "state": "Error"
+    },
+    {
+      "id": 5,
+      "name": "containerFive",
+      "creationDate": "2016-03-20T16:37:00.000Z",
+      "state": "Started"
+    }
+]

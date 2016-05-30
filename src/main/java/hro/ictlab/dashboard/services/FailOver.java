@@ -1,4 +1,4 @@
-package services;
+package hro.ictlab.dashboard.services;
 
 
 import javax.ws.rs.core.Response;

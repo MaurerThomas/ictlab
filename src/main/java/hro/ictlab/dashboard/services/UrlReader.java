@@ -1,4 +1,4 @@
-package services;
+package hro.ictlab.dashboard.services;
 
 import java.io.BufferedReader;
 import java.io.IOException;

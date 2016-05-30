@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ICTLAB dashboard</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        .glyphicon-dy {
+            padding-right: 15px;
+            cursor: pointer;
+        }
+
+        .paddingLeft10{
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="index.html">Dashboard</a>
+        </div>
+    </div>
+</div>
+<div class="container body-content" style="margin-top: 75px;">
+    <div class="row" style="padding-bottom: 10px;">
+        <div class="col-sm-2">
+            <button class="btn btn-primary" id="newContainer"><span class="glyphicon glyphicon-plus"></span> New Container</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <table id="myTable" class="table table-striped" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Container name</th>
+                    <th>State</th>
+                    <th>Event</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Container configuration</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Container name:</label>
+                                <input type="text" class="form-control" id="containerName">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Container description:</label>
+                                <input type="text" class="form-control" id="containerDescription">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-offset-6 col-sm-6">
+                            <label>Container state:</label>
+                            <input type="text" class="form-control" disabled="disabled" id="containerState">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>
+                                    Actions
+                                </label>
+                                <button class="btn btn-default" id="">Start<span class="glyphicon paddingLeft10 glyphicon-play"></span></button>
+                                <button class="btn btn-default" id="">Restart<span class="glyphicon paddingLeft10 glyphicon-repeat"></span></button>
+                                <button class="btn btn-default" id="">Move<span class="glyphicon paddingLeft10 glyphicon-export"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveContainer">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+</body>
+</html>

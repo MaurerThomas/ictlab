@@ -108,20 +108,31 @@
 <script>
     $(document).ready(function () {
         var myTable = $('#myTable');
+        var host = window.location.origin;
 
-         getContainers();
+        //getContainers();
+        //var url = host+ "/resources/docker/containers/get";
 
+
+
+        var url = host+ "/containers.json";
+        console.log(url);
          var myTableDataTable = myTable.DataTable({
-         "aoColumns": [
-             { "bSortable": false },
-             //{ "bSortable": false, "bVisible": false, "aTargets": [0] },
-             { "bSortable": true },
-             { "bSortable": true },
-             { "bSortable": false },
-             { "bSortable": false }
-         ],
-         "order": [[0, "asc"]]
-         });
+             "ajax" : url,
+             "columns" : [
+                 { "data" : "id" },
+                 { "data" : "name" },
+                 { "data" : "creationDate" },
+                 { "data" : "state" },
+                 {
+                     "render": function (data, type, full, meta) {
+                         return '<span class="glyphicon glyphicon-dy glyphicon-play" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-toggle="tooltip" title="Move a container"></span>';
+                     }
+                 }
+             ],
+            "order": [[0, "asc"]]
+        });
+
 
         $('.glyphicon-play').click(function () {
             //Start container
@@ -132,11 +143,11 @@
             var parentTableRow =  $(this).parents('tr');
 
             var row = myTableDataTable.row(parentTableRow);
-
+            var url = host+ "/resources/docker/containers/" + id + "/start";
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: '@Url.Action("StartContainer", "Home")',
+                url: url,
                 data: {
                     id: id
                 },
@@ -151,7 +162,6 @@
 
                     row.data(rowData);
                     myTableDataTable.draw();
-
                 }
             });
         });
@@ -217,8 +227,8 @@
         }
 
         function getContainers() {
-            var host = window.location.origin;
             //var url = host+"/resources/docker/containers/get";
+
             var url = host+ "/containers.json";
             $.getJSON(url, function(data){
                 $.each(data, function (index, value) {
@@ -233,6 +243,7 @@
                 });
             });
         }
+
     });
 </script>
 </body>

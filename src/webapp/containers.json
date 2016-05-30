@@ -1,4 +1,5 @@
-[
+{
+  "data": [
     {
       "id": 1,
       "name": "containerOne",
@@ -29,4 +30,5 @@
       "creationDate": "2016-03-20T16:37:00.000Z",
       "state": "Started"
     }
-]
+  ]
+}

@@ -111,11 +111,11 @@
         var host = window.location.origin;
 
         //getContainers();
-        //var url = host+ "/resources/docker/containers/get";
+        var url = host+ "/ictlab/api/containers/";
 
 
 
-        var url = host+ "/containers.json";
+       // var url = host+ "/containers.json";
         console.log(url);
          var myTableDataTable = myTable.DataTable({
              "ajax" : url,
@@ -143,7 +143,7 @@
             var parentTableRow =  $(this).parents('tr');
 
             var row = myTableDataTable.row(parentTableRow);
-            var url = host+ "/resources/docker/containers/" + id + "/start";
+            var url = host+ "/ictlab/api/containers/" + id + "/start";
             $.ajax({
                 type: "POST",
                 dataType: "json",

@@ -5,11 +5,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 @Path("/docker")
 public class CreateContainerResource {
     private FailOver failOver = new FailOver();
+
+    public CreateContainerResource() throws MalformedURLException {
+    }
 
     @GET
     @Path("/containers/")

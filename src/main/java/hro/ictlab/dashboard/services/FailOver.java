@@ -7,12 +7,15 @@ import java.net.*;
 
 public class FailOver {
     private UrlReader urlReader = new UrlReader();
+    //All hosts
+    //URL[] allHosts = new URL[]{new URL(System.getenv("NODEMANAGER_START"))};
+    private URL[] allHosts;
+
+    public FailOver() throws MalformedURLException {
+        this.allHosts = new URL[]{new URL("http://145.24.222.223:8080/nodemanager/api/containers")};
+    }
 
     public Response handleUrl(URL url) throws IOException {
-        //All hosts
-        //URL[] allHosts = new URL[]{new URL(System.getenv("NODEMANAGER_START"))};
-        URL[] allHosts = new URL[]{new URL("http://145.24.222.223:54624")};
-
         if (pingHost(url)) {
             return Response.ok().entity(urlReader.readFromUrl(url)).build();
         } else {

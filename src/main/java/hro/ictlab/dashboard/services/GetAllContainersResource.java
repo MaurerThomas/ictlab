@@ -6,27 +6,30 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-@Path("/docker")
+@Path("/containers/")
 public class GetAllContainersResource {
     private FailOver failOver = new FailOver();
 
+    public GetAllContainersResource() throws MalformedURLException {
+    }
+
     @GET
-    @Path("/containers/get")
     @Produces(MediaType.APPLICATION_JSON)
     public Response requestContainers() throws IOException {
-
-        if (getAllContainers().getStatus() != 200) {
-            return Response.noContent().build();
+        Response containers = getAllContainers();
+        if (containers.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+            return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
         } else {
-            return Response.ok().entity(getAllContainers()).build();
+            return Response.ok().entity(containers.getEntity()).build();
         }
     }
 
     private Response getAllContainers() throws IOException {
         //URL url = new URL(System.getenv("NODEMANAGER_ALL"));
-        URL url = new URL("http://145.24.222.223:54623/api/containers");
+        URL url = new URL("http://145.24.222.223:8080/nodemanager/api/containers");
         return failOver.handleUrl(url);
     }
 }

@@ -1,15 +1,11 @@
-
+import hro.ictlab.dashboard.services.FailOver;
 import org.junit.Before;
 import org.junit.Test;
 
-import services.FailOver;
-
 import javax.ws.rs.core.Response;
+import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
-
-
-import java.net.URL;
 
 public class FailOverTest {
     private URL host1;

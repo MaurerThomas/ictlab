@@ -17,8 +17,8 @@ public class StartContainerResource {
 
     @GET
     public Response startContainerById(@PathParam("id") String id) throws IOException {
-        Response response = requestToStartContainerById(id);
-        if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+        Response startContainerByIdResponse = requestToStartContainerById(id);
+        if (startContainerByIdResponse.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
         } else {
             return Response.ok().entity(requestToStartContainerById(id)).build();
@@ -27,8 +27,8 @@ public class StartContainerResource {
 
     private Response requestToStartContainerById(String id) throws IOException {
         // Get the IP address from the system environment.
-        //URL url = new URL(System.getenv("NODEMANAGER_START") + id + "-start/");
-        URL url = new URL("http://145.24.222.223:54623/api/Command/" + id + "-start/");
+        URL url = new URL(System.getenv("NODEMANAGER") + id + "/start/");
+        //URL url = new URL("http://145.24.222.223:54623/api/Command/" + id + "-start/");
         return failOver.handleUrl(url);
     }
 }

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-@Path("/docker")
+@Path("/containers/{id}/stop/")
 public class StopContainerResource {
     private FailOver failOver = new FailOver();
 
@@ -16,18 +16,18 @@ public class StopContainerResource {
     }
 
     @GET
-    @Path("/containers/{id}/stop/")
     public Response stopContainerById(@PathParam("id") String id) throws IOException {
-        if (requestToStopContainerById(id).getStatus() != 200) {
-            return Response.noContent().build();
+        Response stopContainerByIdResponse = requestToStopContainerById(id);
+        if (stopContainerByIdResponse.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+            return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
         } else {
             return Response.ok().entity(requestToStopContainerById(id)).build();
         }
     }
 
     private Response requestToStopContainerById(String id) throws IOException {
-        URL url = new URL(System.getenv("NODEMANAGER_START") + id + "-stop/");
-        //URL url = new URL("http://145.24.222.223:54623/api/Command/" + id + "-start/");
+        URL url = new URL(System.getenv("NODEMANAGER") + id + "/stop/");
+        //URL url = new URL("http://145.24.222.223:8080/nodemanager/api/containers/" + id + "/stop/");
         return failOver.handleUrl(url);
     }
 }

@@ -28,8 +28,8 @@ public class GetAllContainersResource {
     }
 
     private Response getAllContainers() throws IOException {
-        //URL url = new URL(System.getenv("NODEMANAGER_ALL"));
-        URL url = new URL("http://145.24.222.223:8080/nodemanager/api/containers");
+        URL url = new URL(System.getenv("NODEMANAGER"));
+        //URL url = new URL("http://145.24.222.223:8080/nodemanager/api/containers");
         return failOver.handleUrl(url);
     }
 }

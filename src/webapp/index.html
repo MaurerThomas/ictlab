@@ -23,7 +23,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="index.html">Dashboard</a>
+            <a class="navbar-brand" href="index.html">Dashboardsss</a>
         </div>
     </div>
 </div>
@@ -133,17 +133,16 @@
         $( "#myTable tbody" ).on( "click","span" ,function() {
             var command = $(this).attr('command');
 
-
             if(command == "start"){
                 start($(this));
             }else if(command == "stop"){
-                stop();
+                stop($(this));
             }else if(command == "restart"){
-                restart();
+                restart($(this));
             }else if(command == "edit"){
-                edit();
+                edit($(this));
             }else if(command == "move"){
-                move();
+                move($(this));
             }
         });
 
@@ -151,7 +150,7 @@
             var data = myTableDataTable.row( obj.parents('tr') ).data();
             var id = data.id;
             var url = host+ "/api/containers/" + id + "/start/";
-
+            var parentTableRow =  obj.parents('tr');
             console.log(url);
 
             $.ajax({
@@ -164,10 +163,10 @@
                 success: function (data) {
                     if (data != "Could not start container") {
                         parentTableRow.css("background-color", "yellow");
-                        rowData[2] = "Starting...";
+                        rowData.state = "Starting...";
                     } else {
                         parentTableRow.css("background-color", "red");
-                        rowData[2] = "Error";
+                        rowData.state = "Error";
                     }
                     row.data(rowData);
                     myTableDataTable.draw();
@@ -175,27 +174,27 @@
             });
         }
 
-        function stop() {
+        function stop(obj) {
             //Stop container
-            var data = getRowData($(this));
-            var id = data[0];
+            var data = myTableDataTable.row( obj.parents('tr') ).data();
+            var id = data.id;
 
             alert("Stop container " + id);
         }
 
-        function restart() {
+        function restart(obj) {
             //Restart container
-            var data = getRowData($(this));
-            var id = data[0];
+            var data = myTableDataTable.row( obj.parents('tr') ).data();
+            var id = data.id;
 
             alert("Restarting container " +id);
         }
 
-        function edit() {
+        function edit(obj) {
             //Edit container
-            var data = getRowData($(this));
-            var containerName = data[1];
-            var containerState = data[2];
+            var data = myTableDataTable.row( obj.parents('tr') ).data();
+            var containerName = data.name;
+            var containerState = data.state;
 
             $("#containerName").val(containerName);
             $("#containerState").val(containerState);
@@ -203,10 +202,10 @@
             $('#myModal').modal('show');
         }
 
-        function move() {
+        function move(obj) {
             //Move container
-            var data = getRowData($(this));
-            var id = data[0];
+            var data = myTableDataTable.row( obj.parents('tr') ).data();
+            var id = data.id;
 
             alert("Moving container " + id);
         }
@@ -225,12 +224,6 @@
             //Starten op node: Lijst van nodes
             alert("Creating container");
         });
-
-        function getRowData(obj) {
-            var data = myTableDataTable.row(obj.parents('tr')).data();
-
-            return data;
-        }
 
         function checkResults(id) {
             //TODO: Elke 10 sec vragen aan Front-end API of container gestart is.

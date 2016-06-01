@@ -1,4 +1,4 @@
-package client;
+package hro.ictlab.dashboard.client;
 
 import org.glassfish.jersey.client.ClientConfig;
 

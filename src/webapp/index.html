@@ -109,7 +109,7 @@
     $(document).ready(function () {
         var myTable = $('#myTable');
         var host = window.location.origin;
-        var url = host+ "/api/containers/";
+        var url = host+ "/ictlab/api/containers/";
 
          var myTableDataTable = myTable.DataTable({
              "ajax" : {
@@ -149,12 +149,12 @@
         function start(obj) {
             var data = myTableDataTable.row( obj.parents('tr') ).data();
             var id = data.id;
-            var url = host+ "/api/containers/" + id + "/start/";
+            var url = host+ "/ictlab/api/containers/" + id + "/start/";
             var parentTableRow =  obj.parents('tr');
             console.log(url);
 
             $.ajax({
-                type: "POST",
+                type: "GET",
                 dataType: "json",
                 url: url,
                 data: {

@@ -109,7 +109,8 @@
     $(document).ready(function () {
         var myTable = $('#myTable');
         var host = window.location.origin;
-        var url = host+ "/api/containers/";
+        var url = host+ "/ictlab/api/containers/";
+        console.log(url);
 
          var myTableDataTable = myTable.DataTable({
              "ajax" : {
@@ -149,8 +150,10 @@
         function start(obj) {
             var data = myTableDataTable.row( obj.parents('tr') ).data();
             var id = data.id;
-            var url = host+ "/api/containers/" + id + "/start/";
+            var url = host+ "/ictlab/api/containers/" + id + "/start/";
             var parentTableRow =  obj.parents('tr');
+            var row = myTableDataTable.row(obj.parents('tr'));
+
             console.log(url);
 
             $.ajax({
@@ -163,12 +166,12 @@
                 success: function (data) {
                     if (data != "Could not start container") {
                         parentTableRow.css("background-color", "yellow");
-                        rowData.state = "Starting...";
+                        data.state = "Starting...";
                     } else {
                         parentTableRow.css("background-color", "red");
-                        rowData.state = "Error";
+                        data.state = "Error";
                     }
-                    row.data(rowData);
+                    row.data(data);
                     myTableDataTable.draw();
                 }
             });

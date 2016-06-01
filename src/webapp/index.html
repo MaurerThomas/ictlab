@@ -23,7 +23,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="index.html">Dashboardsss</a>
+            <a class="navbar-brand" href="index.html">Dashboard</a>
         </div>
     </div>
 </div>
@@ -148,13 +148,10 @@
         });
 
         function start(obj) {
-            var data = myTableDataTable.row( obj.parents('tr') ).data();
-            var id = data.id;
+            var rowData = myTableDataTable.row( obj.parents('tr') ).data();
+            var id = rowData.id;
             var url = host+ "/ictlab/api/containers/" + id + "/start/";
             var parentTableRow =  obj.parents('tr');
-            var row = myTableDataTable.row(obj.parents('tr'));
-
-            console.log(url);
 
             $.ajax({
                 type: "GET",
@@ -163,18 +160,20 @@
                 data: {
                     id: id
                 },
-                success: function (data) {
-                    if (data != "Could not start container") {
-                        parentTableRow.css("background-color", "yellow");
-                        data.state = "Starting...";
-                    } else {
+                statusCode: {
+                    201: function () {
+                        parentTableRow.css("background-color", "green");
+                    },
+                    503: function () {
                         parentTableRow.css("background-color", "red");
-                        data.state = "Error";
                     }
-                    row.data(data);
-                    myTableDataTable.draw();
+
                 }
             });
+
+            setTimeout(function () {
+                myTableDataTable.ajax.reload();
+            }, 3000);
         }
 
         function stop(obj) {

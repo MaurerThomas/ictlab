@@ -17,7 +17,6 @@
             padding-left: 10px;
         }
         .loadDiv{
-            display:    none;
             position:   fixed;
             z-index:    1000;
             top:        0;
@@ -143,31 +142,27 @@
              ],
             "order": [[0, "asc"]],
              "initComplete": function(settings, json) {
-                 $('#loadDiv').hide();
+                 $('.loadDiv').hide();
              }
         });
 
         $( "#myTable tbody" ).on( "click","span" ,function() {
             var command = $(this).attr('data-command');
 
-            if(command == "start"){
-                start($(this));
-            }else if(command == "stop"){
-                stop($(this));
-            }else if(command == "restart"){
-                restart($(this));
+            if(command == "start" || command == "stop" || command == "restart" || command == "move"){
+                startRequest($(this), command);
             }else if(command == "edit"){
                 edit($(this));
-            }else if(command == "move"){
-                move($(this));
             }
         });
 
-        function start(obj) {
+        function startRequest(obj, command){
             var rowData = myTableDataTable.row( obj.parents('tr') ).data();
             var id = rowData.id;
-            var url = host+ "/ictlab/api/containers/" + id + "/start/";
+            var url = host+ "/ictlab/api/containers/" + id + "/"+ command + "/";
+            //Command can be start/stop/move/restart
             var parentTableRow =  obj.parents('tr');
+            console.log("command: " + command + " url: " + url);
 
             $.ajax({
                 type: "GET",
@@ -187,25 +182,13 @@
                 }
             });
 
+            reloadDataTable(3000);
+        }
+
+        function reloadDataTable(ms) {
             setTimeout(function () {
                 myTableDataTable.ajax.reload();
-            }, 3000);
-        }
-
-        function stop(obj) {
-            //Stop container
-            var data = myTableDataTable.row( obj.parents('tr') ).data();
-            var id = data.id;
-
-            alert("Stop container " + id);
-        }
-
-        function restart(obj) {
-            //Restart container
-            var data = myTableDataTable.row( obj.parents('tr') ).data();
-            var id = data.id;
-
-            alert("Restarting container " +id);
+            }, ms);
         }
 
         function edit(obj) {
@@ -220,22 +203,14 @@
             $('#myModal').modal('show');
         }
 
-        function move(obj) {
-            //Move container
-            var data = myTableDataTable.row( obj.parents('tr') ).data();
-            var id = data.id;
-
-            alert("Moving container " + id);
-        }
-
-
         $('#saveContainer').click(function () {
             //Save container
             alert("Saved container, will close this window now.");
         });
 
         $('#newContainer').click(function () {
-            //TODO: newContainer maken:
+            //TODO: new Container maken in eem Modal
+            //Modal:
             //Container name
             //Container description
             //Container image, vrije invoer.
@@ -243,9 +218,6 @@
             alert("Creating container");
         });
 
-        function checkResults(id) {
-            //TODO: Elke 10 sec vragen aan Front-end API of container gestart is.
-        }
     });
 </script>
 </body>

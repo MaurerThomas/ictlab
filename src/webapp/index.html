@@ -16,6 +16,19 @@
         .paddingLeft10{
             padding-left: 10px;
         }
+        .loadDiv{
+            display:    none;
+            position:   fixed;
+            z-index:    1000;
+            top:        0;
+            left:       0;
+            height:     100%;
+            width:      100%;
+            background: rgba( 255, 255, 255, .8 )
+            url('http://i.stack.imgur.com/FhHRx.gif')
+            50% 50%
+            no-repeat;
+        }
     </style>
 
 </head>
@@ -100,6 +113,7 @@
 
         </div>
     </div>
+    <div class="loadDiv"></div>
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -110,7 +124,6 @@
         var myTable = $('#myTable');
         var host = window.location.origin;
         var url = host+ "/ictlab/api/containers/";
-        console.log(url);
 
          var myTableDataTable = myTable.DataTable({
              "ajax" : {
@@ -124,15 +137,18 @@
                  { "data" : "state" },
                  {
                      "render": function (data, type, full, meta) {
-                         return '<span class="glyphicon glyphicon-dy glyphicon-play start" command="start" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip"  command="stop" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" command="restart" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog" command="edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" command="move" data-toggle="tooltip" title="Move a container"></span>';
+                         return '<span class="glyphicon glyphicon-dy glyphicon-play start" data-command="start" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip"  data-command="stop" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog" data-command="edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-command="move" data-toggle="tooltip" title="Move a container"></span>';
                      }
                  }
              ],
-            "order": [[0, "asc"]]
+            "order": [[0, "asc"]],
+             "initComplete": function(settings, json) {
+                 $('#loadDiv').hide();
+             }
         });
 
         $( "#myTable tbody" ).on( "click","span" ,function() {
-            var command = $(this).attr('command');
+            var command = $(this).attr('data-command');
 
             if(command == "start"){
                 start($(this));

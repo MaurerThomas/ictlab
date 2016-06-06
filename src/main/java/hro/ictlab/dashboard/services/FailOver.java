@@ -30,32 +30,20 @@ public class FailOver {
     }
 
     /**
-     * 
+     *
      * @param url The URL to connect to.
      * @return
      */
-    public Response connectToUrl(URL url) {
+    public Response handleUrl(URL url) {
         try {
-            handleUrl(url);
+            return Response.ok().entity(tryToConnectToUrl(url).getEntity()).build();
         } catch (FailToConnectException e) {
             logConnetionError(e);
         }
         return Response.noContent().build();
     }
 
-    private static boolean pingHost(URL host) {
-        try {
-            URLConnection connection = host.openConnection();
-            connection.connect();
-            return true;
-        } catch (MalformedURLException e) {
-            throw new IllegalStateException("Error: Wrong URL " + host, e);
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    private Response handleUrl(URL url) throws FailToConnectException {
+    private Response tryToConnectToUrl(URL url) throws FailToConnectException {
         if (pingHost(url)) {
             return Response.ok().entity(urlReader.readFromUrl(url)).build();
         } else {
@@ -74,6 +62,18 @@ public class FailOver {
             }
         }
         return Response.noContent().build();
+    }
+
+    private static boolean pingHost(URL host) {
+        try {
+            URLConnection connection = host.openConnection();
+            connection.connect();
+            return true;
+        } catch (MalformedURLException e) {
+            throw new IllegalStateException("Error: Wrong URL " + host, e);
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private void logConnetionError(Exception e) {

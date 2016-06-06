@@ -45,6 +45,6 @@ public class StartContainerResource {
     }
 
     private Response requestToStartContainerById() {
-        return failOver.connectToUrl(nodeManagerURL);
+        return failOver.handleUrl(nodeManagerURL);
     }
 }

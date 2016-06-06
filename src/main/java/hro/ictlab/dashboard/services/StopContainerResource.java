@@ -42,6 +42,6 @@ public class StopContainerResource {
     }
 
     private Response requestToStopContainerById() {
-        return failOver.connectToUrl(nodeManagerURL);
+        return failOver.handleUrl(nodeManagerURL);
     }
 }

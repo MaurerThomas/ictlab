@@ -36,6 +36,6 @@ public class CreateContainerResource {
 
     private Response requestToCreateContainer(String id) {
         //URL url = new URL("http://145.24.222.223:54623/api/Command/" + id + "-start/");
-        return failOver.connectToUrl(nodeManagerURL);
+        return failOver.handleUrl(nodeManagerURL);
     }
 }

@@ -41,6 +41,6 @@ public class GetAllContainersResource {
     }
 
     private Response getAllContainers() {
-        return failOver.connectToUrl(nodeManagerURL);
+        return failOver.handleUrl(nodeManagerURL);
     }
 }

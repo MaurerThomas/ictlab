@@ -16,13 +16,11 @@ public class FailOverTest {
     }
 
     /**
-     *
      * Method: handleUrl(URL url)
-     *
      */
     @Test
     public void testHandleUrl() throws Exception {
         FailOver failOver = new FailOver();
-        assertEquals(Response.ok().build().getStatus(), failOver.handleUrl(host1).getStatus());
+        assertEquals(Response.ok().build().getStatus(), failOver.connectToUrl(host1).getStatus());
     }
 }

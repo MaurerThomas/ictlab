@@ -2,36 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dock You dashboard</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css" />
     <link rel="icon" type="image/png" href="favicon32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="favicon64.png" sizes="64x64">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css">
 
-    <style>
-        .glyphicon-dy {
-            padding-right: 15px;
-            cursor: pointer;
-        }
-
-        .paddingLeft10{
-            padding-left: 10px;
-        }
-        .loadDiv{
-            position:   fixed;
-            z-index:    1000;
-            top:        0;
-            left:       0;
-            height:     100%;
-            width:      100%;
-            background: rgba( 255, 255, 255, .8 )
-            url('http://i.stack.imgur.com/FhHRx.gif')
-            50% 50%
-            no-repeat;
-        }
-    </style>
-
+    <title>Dock You dashboard</title>
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top">
@@ -89,7 +67,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Container base image:</label>
-                                <input type="text" class="form-control" id="containerBaseImage">
+                                <input type="text" disabled="disabled"  class="form-control" id="containerBaseImage">
                             </div>
                         </div>
                     </div>
@@ -99,9 +77,9 @@
                                 <label>
                                     Actions
                                 </label>
-                                <button class="btn btn-default" id="">Start<span class="glyphicon paddingLeft10 glyphicon-play"></span></button>
-                                <button class="btn btn-default" id="">Restart<span class="glyphicon paddingLeft10 glyphicon-repeat"></span></button>
-                                <button class="btn btn-default" id="">Move<span class="glyphicon paddingLeft10 glyphicon-export"></span></button>
+                                <button class="btn btn-default">Start<span class="glyphicon paddingLeft10 glyphicon-play"></span></button>
+                                <button class="btn btn-default">Restart<span class="glyphicon paddingLeft10 glyphicon-repeat"></span></button>
+                                <button class="btn btn-default">Move<span class="glyphicon paddingLeft10 glyphicon-export"></span></button>
                             </div>
                         </div>
                     </div>
@@ -127,7 +105,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="newContainerName">Container name:</label>
-                                <input type="text" class="form-control" id="newContainerName">
+                                <input type="text" class="form-control" id="newContainerName" placeholder=" e.g. JenkinsContainer ">
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -182,149 +160,7 @@
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
-<script>
-    $(document).ready(function () {
-        var myTable = $('#myTable');
-        var host = window.location.origin;
-        var url = host+ "/ictlab/api/containers/";
+<script type="text/javascript" src="dashboard.js"></script>
 
-         var myTableDataTable = myTable.DataTable({
-             "ajax" : {
-                 "url": url,
-                 "dataSrc": ""
-             },
-             "columns" : [
-                 { "data" : "id" },
-                 { "data" : "name" },
-                 { "data" : "creationdate" },
-                 { "data" : "state" },
-                 {
-                     "render": function (data, type, full, meta) {
-                         return '<span class="glyphicon glyphicon-dy glyphicon-play start" data-command="start" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip"  data-command="stop" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog" data-command="edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-command="move" data-toggle="tooltip" title="Move a container"></span>';
-                     }
-                 }
-             ],
-            "order": [[0, "asc"]],
-             "initComplete": function(settings, json) {
-                 $('.loadDiv').hide();
-             }
-        });
-
-        $( "#myTable tbody" ).on( "click","span" ,function() {
-            var command = $(this).attr('data-command');
-
-            if(command == "start" || command == "stop" || command == "restart" || command == "move"){
-                startRequest($(this), command);
-            }else if(command == "edit"){
-                edit($(this));
-            }
-        });
-
-        function startRequest(obj, command){
-            var parentTableRow = obj.parents('tr');
-            var rowData = myTableDataTable.row(parentTableRow).data();
-            var id = rowData.id;
-            var url = host+ "/ictlab/api/containers/" + id + "/"+ command + "/";
-
-            //Command can be start/stop/move/restart
-            console.log("command: " + command + " url: " + url);
-
-            $.ajax({
-                type: "GET",
-                dataType: "json",
-                url: url,
-                data: {
-                    id: id
-                },
-                statusCode: {
-                    201: function () {
-                        parentTableRow.css("background-color", "green");
-                    },
-                    503: function () {
-                        parentTableRow.css("background-color", "red");
-                    }
-
-                }
-            });
-
-            reloadDataTable(3000);
-        }
-
-        function reloadDataTable(ms) {
-            setTimeout(function () {
-                myTableDataTable.ajax.reload();
-            }, ms);
-        }
-
-        function edit(obj) {
-            //Edit container
-            var data = myTableDataTable.row( obj.parents('tr') ).data();
-            var containerName = data.name;
-            var containerState = data.state;
-
-            $('#containerName').val(containerName);
-            $('#containerState').val(containerState);
-
-            $('#editContainerModal').modal('show');
-        }
-
-        $('#saveContainer').click(function () {
-            //Save container
-            alert("Saved container, will close this window now.");
-        });
-
-        $('#newContainer').click(function () {
-            //TODO: new Container maken in eem Modal
-
-            $('#newContainerModal').modal('show');
-            setNumberOfNodes();
-        });
-
-        $('#startNewContainer').click(function () {
-            var containerName = $('#newContainerName').val();
-            var node = $('#startingNode option:selected').text();
-            var baseImage = $('#newContainerBaseImage').val();
-            var hostPort = $('#hostPort').val();
-            var containerPort = $('#containerPort').val();
-
-            var newData =  {
-                containerName: containerName,
-                node: node,
-                baseImage: baseImage,
-                hostPort: hostPort,
-                containerPort: containerPort
-            };
-            var url = host + "/ictlab/api/containers/";
-            //Post data: ["jenkins","Node 2 (24.227.145.96)","jenkins/latest","80","8080"]:
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: url,
-                data : newData,
-                success: function() {
-                    alert("Create container request sent!")
-                }
-            });
-
-        });
-
-        function setNumberOfNodes() {
-            var select = $('#startingNode');
-            var url = host + "/ictlab/api/nodes/";
-
-            $.ajax({
-                url: url,
-                type:'GET',
-                dataType: 'json',
-                success: function( json ) {
-                    $.each(json, function(i, value) {
-                        select.append($('<option>').text(value).attr('value', value));
-                    });
-                }
-            });
-        }
-
-    });
-</script>
 </body>
 </html>

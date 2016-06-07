@@ -287,16 +287,20 @@
             var hostPort = $('#hostPort').val();
             var containerPort = $('#containerPort').val();
 
-            var newData = [];
-            newData.push(containerName, node, baseImage, hostPort, containerPort);
+            var newData =  {
+                containerName: containerName,
+                node: node,
+                baseImage: baseImage,
+                hostPort: hostPort,
+                containerPort: containerPort
+            };
             var url = host + "/ictlab/api/containers/";
-
             //Post data: ["jenkins","Node 2 (24.227.145.96)","jenkins/latest","80","8080"]:
             $.ajax({
                 type: "POST",
                 dataType: "json",
                 url: url,
-                data : JSON.stringify(newData),
+                data : newData,
                 success: function() {
                     alert("Create container request sent!")
                 }

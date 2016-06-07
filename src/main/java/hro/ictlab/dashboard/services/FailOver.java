@@ -5,9 +5,8 @@ import hro.ictlab.dashboard.exception.FailToConnectException;
 
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,9 +15,6 @@ import java.util.logging.Logger;
  */
 public class FailOver {
     private UrlReader urlReader = new UrlReader();
-    //All hosts
-    //URL[] allHosts = new URL[]{new URL(System.getenv("NODEMANAGER_START"))};
-    private URL[] allHosts;
     private Logger logger = Logger.getLogger("myLogger");
 
     /**
@@ -26,42 +22,38 @@ public class FailOver {
      * @throws MalformedURLException
      */
     public FailOver() throws MalformedURLException {
-        this.allHosts = new URL[]{new URL("http://145.24.222.223:8080/nodemanager/api/containers")};
     }
 
     /**
-     *
      * @param url The URL to connect to.
-     * @return
+     * @param command The command that needs to be executed.
+     * @return HTTP status code: 200 for success or 503 for failure.
      */
-    public Response handleUrl(URL url) {
+    public Response getWorkingHost(List<URL> url, String command)  {
         try {
-            return Response.ok().entity(tryToConnectToUrl(url).getEntity()).build();
-        } catch (FailToConnectException e) {
-            logConnetionError(e);
+            return tryToConnectToUrl(url, command);
+        } catch (MalformedURLException | URISyntaxException | FailToConnectException e) {
+            logConnectionError(e);
         }
-        return Response.noContent().build();
+        return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
     }
 
-    private Response tryToConnectToUrl(URL url) throws FailToConnectException {
-        if (pingHost(url)) {
-            return Response.ok().entity(urlReader.readFromUrl(url)).build();
-        } else {
-            return responseFromBackUpHost();
+    private Response tryToConnectToUrl(List<URL> url, String command) throws FailToConnectException, MalformedURLException, URISyntaxException {
+        URL workingHost = lookUpAllHosts(url);
+        URL finalURL = addExtraPathToUrl(workingHost, command);
+        if (workingHost != null) {
+            return Response.ok().entity(urlReader.readFromUrl(finalURL)).build();
         }
+        return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
     }
 
-    private Response responseFromBackUpHost() {
-        for (URL newWorkingHost : allHosts) {
-            try {
-                if (pingHost(newWorkingHost)) {
-                    return Response.ok().entity(urlReader.readFromUrl(newWorkingHost)).build();
-                }
-            } catch (FailToConnectException e) {
-                logConnetionError(e);
+    private URL lookUpAllHosts(List<URL> hosts) throws FailToConnectException {
+        for (URL host : hosts) {
+            if (pingHost(host)) {
+                return host;
             }
         }
-        return Response.noContent().build();
+        throw new FailToConnectException("All hosts are down.");
     }
 
     private static boolean pingHost(URL host) {
@@ -76,7 +68,14 @@ public class FailOver {
         }
     }
 
-    private void logConnetionError(Exception e) {
+    private static URL addExtraPathToUrl(URL baseUrl, String command) throws URISyntaxException, MalformedURLException {
+        URI uri = baseUrl.toURI();
+        String newPath = uri.getPath() + '/' + command;
+        URI newUri = uri.resolve(newPath);
+        return newUri.toURL();
+    }
+
+    private void logConnectionError(Exception e)  {
         logger.log(Level.SEVERE, "Could not connect to URL", e);
     }
 }

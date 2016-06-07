@@ -7,22 +7,29 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class is responsible for retrieving all the containers.
  */
 @Path("/containers/")
 public class GetAllContainersResource {
-    private static URL nodeManagerURL;
-    private FailOver failOver = new FailOver();
+    private static List<URL> nodeManagerURL;
+    private static FailOver failOver;
 
     /**
      * Creates a new URL from the system environment.
      * @throws MalformedURLException
      */
     public GetAllContainersResource() throws MalformedURLException {
-        //URL url = new URL(System.getenv("NODEMANAGER"));
-        nodeManagerURL = new URL("http://145.24.222.223:8080/nodemanager/api/containers/");
+        // Get the IP address from the system environment.
+        if(nodeManagerURL == null) {
+            //nodeManagerURL = Arrays.asList(new URL(System.getenv("NODEMANAGER")));
+            // Testing URL
+            nodeManagerURL = Arrays.asList(new URL("http://145.24.222.223:8080/nodemanager/api/containers"));
+            failOver = new FailOver();
+        }
     }
 
     /**
@@ -41,6 +48,6 @@ public class GetAllContainersResource {
     }
 
     private Response getAllContainers() {
-        return failOver.handleUrl(nodeManagerURL);
+        return failOver.getWorkingHost(nodeManagerURL, "");
     }
 }

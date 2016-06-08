@@ -14,22 +14,14 @@ import java.util.logging.Logger;
  * This class is responsible for connecting to a working host.
  */
 public class FailOver {
-    private UrlReader urlReader = new UrlReader();
-    private Logger logger = Logger.getLogger("myLogger");
-
     /**
-     * Creates a new URL from the system environment.
-     * @throws MalformedURLException
-     */
-    public FailOver() throws MalformedURLException {
-    }
-
-    /**
-     * @param url The URL to connect to.
+     * Gets a response from a working host.
+     *
+     * @param url     The URL to connect to.
      * @param command The command that needs to be executed.
      * @return HTTP status code: 200 for success or 503 for failure.
      */
-    public Response getWorkingHost(List<URL> url, String command)  {
+    public Response getResponseFromWorkingHost(List<URL> url, String command) {
         try {
             return tryToConnectToUrl(url, command);
         } catch (MalformedURLException | URISyntaxException | FailToConnectException e) {
@@ -40,9 +32,18 @@ public class FailOver {
 
     private Response tryToConnectToUrl(List<URL> url, String command) throws FailToConnectException, MalformedURLException, URISyntaxException {
         URL workingHost = lookUpAllHosts(url);
-        URL finalURL = addExtraPathToUrl(workingHost, command);
         if (workingHost != null) {
-            return Response.ok().entity(urlReader.readFromUrl(finalURL)).build();
+            return readUrl(workingHost, command);
+        }
+        return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
+    }
+
+    private Response readUrl(URL workingHost, String command) throws MalformedURLException, URISyntaxException, FailToConnectException {
+        UrlReader urlReader = new UrlReader();
+        URL finalURL = addExtraPathToUrl(workingHost, command);
+        String output = urlReader.readFromUrl(finalURL);
+        if (output != null) {
+            return Response.status(Response.Status.OK).entity(output).build();
         }
         return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
     }
@@ -54,6 +55,11 @@ public class FailOver {
             }
         }
         throw new FailToConnectException("All hosts are down.");
+    }
+
+    private void logConnectionError(Exception e) {
+        Logger logger = Logger.getLogger("myLogger");
+        logger.log(Level.SEVERE, "Could not connect to URL", e);
     }
 
     private static boolean pingHost(URL host) {
@@ -73,9 +79,5 @@ public class FailOver {
         String newPath = uri.getPath() + '/' + command;
         URI newUri = uri.resolve(newPath);
         return newUri.toURL();
-    }
-
-    private void logConnectionError(Exception e)  {
-        logger.log(Level.SEVERE, "Could not connect to URL", e);
     }
 }

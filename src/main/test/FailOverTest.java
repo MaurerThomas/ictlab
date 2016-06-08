@@ -1,21 +1,27 @@
+import hro.ictlab.dashboard.services.FailOver;
 import org.junit.Before;
+import org.junit.Test;
+
+import javax.ws.rs.core.Response;
+
+import static org.junit.Assert.assertEquals;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 public class FailOverTest {
-    private URL host1;
+    private List<URL> nodeManagerURL;
+    private FailOver failOver;
 
     @Before
     public void before() throws Exception {
-       host1 = new URL ("http://145.24.222.223:54623");
+        failOver = new FailOver();
+        nodeManagerURL = Arrays.asList(new URL("http://145.24.222.224:8080/nodemanager/api/containers"),new URL("http://145.24.222.223:8080/nodemanager/api/containers"));
     }
 
-    /**
-     * Method: getWorkingHost(URL url)
-     */
-//    @Test
-//    public void testHandleUrl() throws Exception {
-//        FailOver failOver = new FailOver();
-//        assertEquals(Response.ok().build().getStatus(), failOver.getWorkingHost(host1).getStatus());
-//    }
+    @Test
+    public void failOverTest() {
+        assertEquals(Response.status(Response.Status.OK).build().getStatus(), failOver.getResponseFromWorkingHost(nodeManagerURL,"").getStatus());
+    }
 }

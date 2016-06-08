@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-class UrlReader {
-    String readFromUrl(URL url) throws FailToConnectException {
+public class UrlReader {
+    public String readFromUrl(URL url) throws FailToConnectException {
         try {
             URLConnection urlConnection = url.openConnection();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(

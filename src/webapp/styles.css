@@ -19,3 +19,13 @@
     50% 50%
     no-repeat;
 }
+
+.navbar-brand img {
+    -webkit-transition: -webkit-transform 1s;
+    transition: transform 1s;
+}
+
+.navbar-brand img:hover {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+}

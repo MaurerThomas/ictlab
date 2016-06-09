@@ -2,25 +2,28 @@ $(document).ready(function () {
     var myTable = $('#myTable');
     var host = window.location.origin;
     var url = host+ "/ictlab/api/containers/";
+    var nodes = [];
+
+    getNumberOfNodes();
 
     var myTableDataTable = myTable.DataTable({
-        "ajax" : {
+        "ajax": {
             "url": url,
             "dataSrc": ""
         },
-        "columns" : [
-            { "data" : "id" },
-            { "data" : "name" },
-            { "data" : "creationdate" },
-            { "data" : "state" },
+        "columns": [
+            {"data": "id"},
+            {"data": "name"},
+            {"data": "creationdate"},
+            {"data": "state"},
             {
                 "render": function (data, type, full, meta) {
-                    return '<span class="glyphicon glyphicon-dy glyphicon-play start" data-command="start" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip"  data-command="stop" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog" data-command="edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-command="move" data-toggle="tooltip" title="Move a container"></span>';
+                    return '<span class="glyphicon glyphicon-dy glyphicon-play start" data-command="start" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip"  data-command="stop" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-command="move" data-toggle="tooltip" title="Move a container"></span><span class="glyphicon glyphicon-dy glyphicon-duplicate scale" data-command="scale" data-toggle="scale" title="Scale a container"></span>';
                 }
             }
         ],
         "order": [[0, "asc"]],
-        "initComplete": function(settings, json) {
+        "initComplete": function (settings, json) {
             $('.loadDiv').hide();
         }
     });
@@ -28,12 +31,10 @@ $(document).ready(function () {
     $( "#myTable tbody" ).on( "click","span" ,function() {
         var command = $(this).attr('data-command');
 
-        if(command == "start" || command == "stop" || command == "restart"){
-            startRequest($(this), command);
-        }else if(command == "edit"){
-            edit($(this));
-        }else if(command == "move"){
+        if(command == "move"){
             move($(this));
+        }else {
+            startRequest($(this), command);
         }
     });
 
@@ -42,7 +43,19 @@ $(document).ready(function () {
         var id = rowData.id;
         var url = host+ "/ictlab/api/containers/" + id + "/move/";
 
-        // Ga naar /containers/id/move/andereHostAdres
+        //Alle nodes staan in de nodes var.
+        //TODO: Alle nodes tonen en 1 selecteren.
+        //TODO: Node ophalen uit select
+        var node = "Node1";
+
+        $.ajax({
+            type: "POST",
+            dataType : "json",
+            url: url,
+            data: {
+                node : node
+            }
+        });
     }
 
     function startRequest(obj, command){
@@ -81,26 +94,7 @@ $(document).ready(function () {
         }, ms);
     }
 
-    function edit(obj) {
-        //Edit container
-        var data = myTableDataTable.row( obj.parents('tr') ).data();
-        var containerName = data.name;
-        var containerState = data.state;
-
-        $('#containerName').val(containerName);
-        $('#containerState').val(containerState);
-
-        $('#editContainerModal').modal('show');
-    }
-
-    $('#saveContainer').click(function () {
-        //Save container
-        alert("Saved container, will close this window now.");
-    });
-
     $('#newContainer').click(function () {
-        //TODO: new Container maken in eem Modal
-
         $('#newContainerModal').modal('show');
         setNumberOfNodes();
     });
@@ -132,7 +126,12 @@ $(document).ready(function () {
     });
 
     function setNumberOfNodes() {
-        var select = $('#startingNode');
+        $.each(nodes, function( index, value ) {
+            $('#startingNode').append($('<option>').text(value).attr('value', value));
+        });
+    }
+    
+    function getNumberOfNodes() {
         var url = host + "/ictlab/api/nodes/";
 
         $.ajax({
@@ -140,8 +139,8 @@ $(document).ready(function () {
             type:'GET',
             dataType: 'json',
             success: function(json) {
-                $.each(json, function(i, value) {
-                    select.append($('<option>').text(value).attr('value', value));
+                $.each(json, function(i, node) {
+                    nodes.push(node.name);
                 });
             }
         });

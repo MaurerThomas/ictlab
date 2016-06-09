@@ -42,57 +42,6 @@
         </div>
     </div>
     <!-- Modal -->
-    <div id="editContainerModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Container configuration</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Container name:</label>
-                                <input type="text" class="form-control" id="containerName">
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label>Container state:</label>
-                            <input type="text" class="form-control" disabled="disabled" id="containerState">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label>Container base image:</label>
-                                <input type="text" disabled="disabled"  class="form-control" id="containerBaseImage">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top: 10px;">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label>
-                                    Actions
-                                </label>
-                                <button class="btn btn-default">Start<span class="glyphicon paddingLeft10 glyphicon-play"></span></button>
-                                <button class="btn btn-default">Restart<span class="glyphicon paddingLeft10 glyphicon-repeat"></span></button>
-                                <button class="btn btn-default">Move<span class="glyphicon paddingLeft10 glyphicon-export"></span></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveContainer">Save</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
     <div id="newContainerModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -112,8 +61,6 @@
                             <div class="form-group">
                                 <label for="startingNode">Preferred starting node:</label>
                                 <select class="form-control" id="startingNode">
-                                    <option>Node 1 (192.168.1.1)</option>
-                                    <option>Node 2 (24.227.145.96)</option>
                                 </select>
                             </div>
                         </div>

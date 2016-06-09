@@ -20,7 +20,7 @@ abstract class Resource {
         if (nodeManagerURL == null) {
             // nodeManagerURL = Arrays.asList(new URL(System.getenv("NODEMANAGER")));
             // Testing URL
-            nodeManagerURL = Arrays.asList(new URL("http://145.24.222.223:8080/nodemanager/api/containers"));
+            nodeManagerURL = Arrays.asList(new URL("http://145.24.222.223:8080/nodemanager/api"));
             failOver = new FailOver();
         }
     }

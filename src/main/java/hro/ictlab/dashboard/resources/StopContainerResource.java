@@ -29,7 +29,7 @@ public class StopContainerResource extends Resource {
      */
     @GET
     public Response stopContainerById(@PathParam("id") String containerID) {
-        Response stopContainerByIdResponse = getResponseFromHost(containerID + "/stop/");
+        Response stopContainerByIdResponse = getResponseFromHost("containers/" + containerID + "/stop/");
         if (stopContainerByIdResponse.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
         } else {

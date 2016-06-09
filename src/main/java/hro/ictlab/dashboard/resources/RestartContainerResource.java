@@ -29,7 +29,7 @@ public class RestartContainerResource extends Resource {
      */
     @GET
     public Response restartContainerById(@PathParam("id") String containerID) {
-        Response requestToRestartContainerById = getResponseFromHost(containerID + "/restart/");
+        Response requestToRestartContainerById = getResponseFromHost("containers/" + containerID + "/restart/");
         if (requestToRestartContainerById.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
         } else {

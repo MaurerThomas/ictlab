@@ -30,7 +30,7 @@ public class StartContainerResource extends Resource {
      */
     @GET
     public Response startContainerById(@PathParam("id") String containerID) {
-        Response startContainerByIdResponse = getResponseFromHost(containerID + "/start/");
+        Response startContainerByIdResponse = getResponseFromHost("containers/" + containerID + "/start/");
         if (startContainerByIdResponse.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
         } else {

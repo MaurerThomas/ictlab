@@ -24,8 +24,6 @@ var myTableDataTable;
 $(document).ready(function () {
     var url = host + "/containers/";
 
-    getNumberOfNodes();
-
     /**
      * Initialize a new DataTable object on the given HTML table
      * @return {Object} appends the action buttons to the HTML TableRow after the JSON is loaded
@@ -49,8 +47,11 @@ $(document).ready(function () {
         "order": [[0, "asc"]],
         "initComplete": function () {
             $('.loadDiv').hide();
+            reloadDataTable(5000);
         }
     });
+
+    getNumberOfNodes();
 
     /**
      * Filter which button has been clicked on a row to start the specific method.
@@ -193,6 +194,10 @@ function startRequest(currentObject, command){
     reloadDataTable(3000);
 }
 
+/**
+ * Reload the datatable after given milliseconds
+ * @param {number} ms
+ */
 function reloadDataTable(ms) {
     setTimeout(function () {
         myTableDataTable.ajax.reload();

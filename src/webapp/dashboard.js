@@ -40,7 +40,7 @@ $(document).ready(function () {
             {"data": "state"},
             {
                 "render": function () {
-                    return '<span class="glyphicon glyphicon-play" data-command="start" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-off" data-toggle="tooltip"  data-command="stop" title="Stop a container"></span><span class="glyphicon glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-export" data-command="move" data-toggle="tooltip" title="Move a container"></span><span class="glyphicon glyphicon-duplicate" data-command="scale" data-toggle="scale" title="Scale a container"></span>';
+                    return '<span class="glyphicon glyphicon-play" data-command="start" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-stop" data-toggle="tooltip"  data-command="stop" title="Stop a container"></span><span class="glyphicon glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart a container"></span> <span class="glyphicon glyphicon-remove-sign" data-command="delete" data-toggle="tooltip" title="Delete a container"></span><span class="glyphicon glyphicon-export" data-command="move" data-toggle="tooltip" title="Move a container"></span><span class="glyphicon glyphicon-duplicate" data-command="scale" data-toggle="scale" title="Scale a container"></span>';
                 }
             }
         ],
@@ -61,6 +61,8 @@ $(document).ready(function () {
 
         if(command === "move"){
             move($(this));
+        }else if(command === "scale"){
+            scale($(this));
         }else {
             startRequest($(this), command);
         }
@@ -89,6 +91,7 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             dataType: "json",
+            contentType: "application/json",
             url: url,
             data : {
                 containerName: containerName,
@@ -111,7 +114,7 @@ $(document).ready(function () {
  */
 function setNumberOfNodes() {
     $.each(nodes, function( index, value ) {
-        $('#startingNode').append($('<option>').text(value).attr('value', value));
+        $('#startingNode, #moveContainerNodes').append($('<option>').text(value).attr('value', value));
     });
 }
 
@@ -140,25 +143,32 @@ function getNumberOfNodes() {
 function move(currentObject) {
     var rowData = myTableDataTable.row(currentObject.parents('tr')).data();
     var id = rowData.id;
-    var url = host+ "/containers/" + id + "/move/";
 
-    //Alle nodes staan in de nodes var.
-    //TODO: Alle nodes tonen en 1 selecteren.
-    //TODO: Node ophalen uit select
-    var node = "Node1";
+    $('#moveContainerModal').modal('show');
+    setNumberOfNodes();
+    $('#moveContainerId').val(id);
+}
+
+$('#moveContainer').click(function () {
+    var node = $('#moveContainerNodes option:selected').text();
+    var id = $('#moveContainerId').val();
+
+    postMoveContainer(id, node);
+});
+
+function postMoveContainer(id, node) {
+    var url = host+ "/containers/" + id + "/move/" + node;
 
     $.ajax({
-        type: "POST",
+        type: "GET",
         dataType : "json",
-        url: url,
-        data: {
-            node : node
-        }
+        url: url
     });
 }
 
+
 /**
- * Start a specific JSON request. Can be start/stop/restart/scale
+ * Start a specific JSON request. Can be start/stop/restart
  * @param {Object} currentObject
  * @param {string} command
  *

@@ -43,6 +43,38 @@
             </div>
         </div>
     </div>
+
+    <div id="moveContainerModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Move container</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="moveContainerId">Container ID:</label>
+                                <input type="text" class="form-control" id="moveContainerId" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="moveContainerNodes">Move container to which Docker Node?</label>
+                                <select class="form-control" id="moveContainerNodes">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="moveContainer">Move</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal -->
     <div id="newContainerModal" class="modal fade" role="dialog">
         <div class="modal-dialog">

@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 
 
 /**
- * This class is responsible for starting a container by an ID.
+ * This class is responsible for making a request to start a container by an ID.
  */
 @Path("/containers/{id}/start/")
 public class StartContainerResource extends Resource {
@@ -23,7 +23,7 @@ public class StartContainerResource extends Resource {
     }
 
     /**
-     * Handles the starting of a container.
+     * Responsible for making a request to start a container by an ID.
      *
      * @param containerID The container ID.
      * @return HTTP status code: 201 for success or 503 for failure.

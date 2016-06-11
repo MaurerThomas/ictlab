@@ -8,7 +8,16 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * This class is responsible for reading a URL and then send it back.
+ */
 public class UrlReader {
+    /**
+     * Reads the URL.
+     * @param url The URL to read.
+     * @return A string containing the body of the response.
+     * @throws FailToConnectException
+     */
     public String readFromUrl(URL url) throws FailToConnectException {
         try {
             URLConnection urlConnection = url.openConnection();

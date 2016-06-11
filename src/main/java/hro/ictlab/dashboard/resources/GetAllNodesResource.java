@@ -7,6 +7,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 
+/**
+ * This class is responsible for making a request to retrieve all the nodes.
+ */
 @Path("/nodes/")
 public class GetAllNodesResource extends Resource {
 
@@ -20,7 +23,7 @@ public class GetAllNodesResource extends Resource {
     }
 
     /**
-     * Responsible for getting all the nodes.
+     * Responsible for making a request to get all the nodes.
      *
      * @return HTTP status code: 200 for success or 503 for failure.
      */

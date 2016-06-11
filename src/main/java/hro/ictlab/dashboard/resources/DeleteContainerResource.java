@@ -7,30 +7,30 @@ import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 
 /**
- * This class is responsible for making a request to stop a container by an ID.
+ * This class is responsible for making a request to delete a container by ID.
  */
-@Path("/containers/{id}/stop/")
-public class StopContainerResource extends Resource {
+@Path("/containers/{id}/delete/")
+public class DeleteContainerResource extends Resource {
 
     /**
      * Creates a new resource
      *
      * @throws MalformedURLException
      */
-    public StopContainerResource() throws MalformedURLException {
+    public DeleteContainerResource() throws MalformedURLException {
         super();
     }
 
     /**
-     * Responsible for making a request to stop a container by an ID.
+     * Sends a request to delete a container by ID.
      *
      * @param containerID The container ID.
      * @return HTTP status code: 200 for success or 503 for failure.
      */
     @GET
-    public Response stopContainerById(@PathParam("id") String containerID) {
-        Response stopContainerByIdResponse = getResponseFromHost("containers/" + containerID + "/stop/");
-        if (stopContainerByIdResponse.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+    public Response deleteContainerById(@PathParam("id") String containerID) {
+        Response deleteContainerByIdResponse = getResponseFromHost("containers/" + containerID + "/delete/");
+        if (deleteContainerByIdResponse.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
         } else {
             return Response.ok().status(Response.Status.CREATED).build();

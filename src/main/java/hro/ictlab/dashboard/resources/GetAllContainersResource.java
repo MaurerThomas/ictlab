@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 
 /**
- * This class is responsible for retrieving all the containers.
+ * This class is responsible for making a request to retrieve all the containers.
  */
 @Path("/containers/")
 public class GetAllContainersResource extends Resource {
@@ -23,9 +23,9 @@ public class GetAllContainersResource extends Resource {
     }
 
     /**
-     * Responsible for getting all the containers
+     * Responsible for making a request to retrieve all the containers.
      *
-     * @return HTTP status code: 200 for success or 503 for failure. Including all the containers.
+     * @return HTTP status code: 200 for success or 503 for failure. Including all the containers in JSON format.
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)

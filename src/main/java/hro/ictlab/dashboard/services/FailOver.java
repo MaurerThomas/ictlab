@@ -40,8 +40,13 @@ public class FailOver {
 
     private Response readUrl(URL workingHost, String command) throws MalformedURLException, URISyntaxException, FailToConnectException {
         UrlReader urlReader = new UrlReader();
+        String output;
         URL finalURL = addExtraPathToUrl(workingHost, command);
-        String output = urlReader.readFromUrl(finalURL);
+        if (!command.isEmpty()) {
+            output = urlReader.readFromUrl(finalURL);
+        } else {
+            return Response.status(Response.Status.OK).build();
+        }
         if (output != null) {
             return Response.status(Response.Status.OK).entity(output).build();
         }

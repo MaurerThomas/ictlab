@@ -87,19 +87,20 @@ $(document).ready(function () {
         var hostPort = $('#hostPort').val();
         var containerPort = $('#containerPort').val();
         var url = host + "/containers/";
+        var containerData = {
+            containerName: containerName,
+            node: node,
+            baseImage: baseImage,
+            hostPort: hostPort,
+            containerPort: containerPort
+        };
 
         $.ajax({
             type: "POST",
             dataType: "json",
             contentType: "application/json",
             url: url,
-            data : {
-                containerName: containerName,
-                node: node,
-                baseImage: baseImage,
-                hostPort: hostPort,
-                containerPort: containerPort
-            },
+            data : JSON.stringify(containerData),
             success: function() {
                 alert("Create container request sent!")
             }

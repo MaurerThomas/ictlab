@@ -12,6 +12,7 @@
     <title>Dock You dashboard</title>
 </head>
 <body>
+
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -19,7 +20,14 @@
         </div>
     </div>
 </div>
-<div class="container body-content" style="margin-top: 75px;">
+<div class="container body-content" style="margin-top: 75px">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert fade in" style="display: none">
+                <a class="close" onclick="$('.alert').hide()" aria-label="close">&times;</a>
+            </div>
+        </div>
+    </div>
     <div class="row" style="padding-bottom: 10px;">
         <div class="col-sm-2">
             <button class="btn btn-primary" id="newContainer"><span class="glyphicon glyphicon-plus"></span> New Container</button>
@@ -137,6 +145,7 @@
 
     <div class="loadDiv"></div>
 </div>
+
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>

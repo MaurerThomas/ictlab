@@ -50,20 +50,16 @@ $(document).ready(function () {
             reloadDataTable(5000);
         }
     });
-
-    getNumberOfNodes();
-
+    
     /**
      * Filter which button has been clicked on a row to start the specific method.
      */
     $( "#myTable tbody" ).on( "click","span" ,function() {
         var command = $(this).attr('data-command');
 
-        if(command === "move"){
-            move($(this));
-        }else if(command === "scale"){
-            scale($(this));
-        }else {
+        if (command === "move" || command === "scale"){
+            moveOrScale($(this), command);
+        } else {
             startRequest($(this), command);
         }
     });
@@ -74,7 +70,6 @@ $(document).ready(function () {
      */
     $('#newContainer').click(function () {
         $('#newContainerModal').modal('show');
-        setNumberOfNodes();
     });
 
     /**
@@ -108,15 +103,14 @@ $(document).ready(function () {
 
     });
 
+    getNumberOfNodes();
 });
 
 /**
  * Appends all items in the string[] nodes to a HTML select as option.
  */
-function setNumberOfNodes() {
-    $.each(nodes, function( index, value ) {
-        $('#startingNode, #moveContainerNodes').append($('<option>').text(value).attr('value', value));
-    });
+function addNode(value) {
+    $('#startingNode, #moveContainerNodes').append($('<option>').text(value).attr('value', value));
 }
 
 /**
@@ -131,34 +125,43 @@ function getNumberOfNodes() {
         dataType: 'json',
         success: function(json) {
             $.each(json, function(i, node) {
-                nodes.push(node.name);
+                addNode(node.name);
             });
         }
     });
 }
 
 /**
- * Start the JSON request to move a container
+ * Start the JSON request to moveOrScale a container
  * @param {Object} currentObject
+ * @param {string} command
  */
-function move(currentObject) {
+function moveOrScale(currentObject, command) {
     var rowData = myTableDataTable.row(currentObject.parents('tr')).data();
     var id = rowData.id;
 
     $('#moveContainerModal').modal('show');
-    setNumberOfNodes();
     $('#moveContainerId').val(id);
+    $('#moveContainer').val(command);
+
 }
 
 $('#moveContainer').click(function () {
     var node = $('#moveContainerNodes option:selected').text();
     var id = $('#moveContainerId').val();
+    var method = $('#moveContainer').val();
 
-    postMoveContainer(id, node);
+    postMoveOrScaleContainer(id, node, method);
 });
 
-function postMoveContainer(id, node) {
-    var url = host+ "/containers/" + id + "/move/" + node;
+/**
+ * Start moving a container. JSON request to move/scale the specified container.
+ * @param id {number} container ID
+ * @param node {string} Node IP-address
+ * @param method {string} Can be move or scale.
+ */
+function postMoveOrScaleContainer(id, node, method) {
+    var url = host+ "/containers/" + id + "/" + method + "/" + node;
 
     $.ajax({
         type: "GET",
@@ -167,9 +170,8 @@ function postMoveContainer(id, node) {
     });
 }
 
-
 /**
- * Start a specific JSON request. Can be start/stop/restart
+ * Start a specific JSON request. Can be start/stop/restart/remove
  * @param {Object} currentObject
  * @param {string} command
  *
@@ -198,7 +200,6 @@ function startRequest(currentObject, command){
             503: function () {
                 parentTableRow.css("background-color", "red");
             }
-
         }
     });
 

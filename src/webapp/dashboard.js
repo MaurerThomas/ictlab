@@ -36,11 +36,11 @@ $(document).ready(function () {
         "columns": [
             {"data": "id"},
             {"data": "name"},
-            {"data": "creationdate"},
+            {"data": "creationDate"},
             {"data": "state"},
             {
                 "render": function () {
-                    return '<span class="glyphicon glyphicon-play" data-command="start" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-stop" data-toggle="tooltip"  data-command="stop" title="Stop a container"></span><span class="glyphicon glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart a container"></span> <span class="glyphicon glyphicon-remove-sign" data-command="delete" data-toggle="tooltip" title="Delete a container"></span><span class="glyphicon glyphicon-export" data-command="move" data-toggle="tooltip" title="Move a container"></span><span class="glyphicon glyphicon-duplicate" data-command="scale" data-toggle="scale" title="Scale a container"></span>';
+                    return '<span class="glyphicon glyphicon-play" data-command="start" data-toggle="tooltip" title="Start container"></span><span class="glyphicon glyphicon-stop" data-toggle="tooltip"  data-command="stop" title="Stop container"></span><span class="glyphicon glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart container"></span> <span class="glyphicon glyphicon-remove-sign" data-command="delete" data-toggle="tooltip" title="Delete container"></span><span class="glyphicon glyphicon-export" data-command="move" data-toggle="tooltip" title="Move container"></span><span class="glyphicon glyphicon-duplicate" data-command="scale" data-toggle="scale" title="Scale container"></span>';
                 }
             }
         ],
@@ -96,8 +96,14 @@ $(document).ready(function () {
             contentType: "application/json",
             url: url,
             data : JSON.stringify(containerData),
-            success: function() {
-                alert("Create container request sent!")
+            statusCode: {
+                201: function () {
+                    $('.alert').text("Created container: " + containerName);
+                    reloadDataTable(3000);
+                },
+                503: function () {
+                    $('.alert').text("Could not create container: " + containerName);
+                }
             }
         });
 

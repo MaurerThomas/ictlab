@@ -30,6 +30,7 @@ public class GetAllContainersResource extends Resource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response requestContainers() {
+        getResponseFromHost("nodes/hb");
         Response containers = getResponseFromHost("containers");
         if (containers.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
             return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();

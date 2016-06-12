@@ -50,66 +50,67 @@ $(document).ready(function () {
             reloadDataTable(5000);
         }
     });
-    
-    /**
-     * Filter which button has been clicked on a row to start the specific method.
-     */
-    $( "#myTable tbody" ).on( "click","span" ,function() {
-        var command = $(this).attr('data-command');
 
-        if (command === "move" || command === "scale"){
-            moveOrScale($(this), command);
-        } else {
-            startRequest($(this), command);
+    getNumberOfNodes();
+});
+
+
+/**
+ * Filter which button has been clicked on a row to start the specific method.
+ */
+$( "#myTable tbody" ).on( "click", "span", function() {
+    var command = $(this).attr('data-command');
+
+    if (command === "move" || command === "scale"){
+        moveOrScale($(this), command);
+    } else {
+        startRequest($(this), command);
+    }
+});
+
+/**
+ * Show HTML modal where you can fill in details to create a new Container.
+ * Set the number of nodes on this modal.
+ */
+$('#newContainer').click(function () {
+    $('#newContainerModal').modal('show');
+});
+
+/**
+ * Start a new container create request with filled in details
+ */
+$('#startNewContainer').click(function () {
+    var containerName = $('#newContainerName').val();
+    var node = $('#startingNode option:selected').text();
+    var baseImage = $('#newContainerBaseImage').val();
+    var hostPort = $('#hostPort').val();
+    var containerPort = $('#containerPort').val();
+    var url = host + "/containers/";
+    var containerData = {
+        containerName: containerName,
+        node: node,
+        baseImage: baseImage,
+        hostPort: hostPort,
+        containerPort: containerPort
+    };
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        url: url,
+        data : JSON.stringify(containerData),
+        statusCode: {
+            201: function () {
+                $('.alert').text("Created container: " + containerName);
+                reloadDataTable(3000);
+            },
+            503: function () {
+                $('.alert').text("Could not create container: " + containerName);
+            }
         }
     });
 
-    /**
-     * Show HTML modal where you can fill in details to create a new Container.
-     * Set the number of nodes on this modal.
-     */
-    $('#newContainer').click(function () {
-        $('#newContainerModal').modal('show');
-    });
-
-    /**
-     * Start a new container create request with filled in details
-     */
-    $('#startNewContainer').click(function () {
-        var containerName = $('#newContainerName').val();
-        var node = $('#startingNode option:selected').text();
-        var baseImage = $('#newContainerBaseImage').val();
-        var hostPort = $('#hostPort').val();
-        var containerPort = $('#containerPort').val();
-        var url = host + "/containers/";
-        var containerData = {
-            containerName: containerName,
-            node: node,
-            baseImage: baseImage,
-            hostPort: hostPort,
-            containerPort: containerPort
-        };
-
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            contentType: "application/json",
-            url: url,
-            data : JSON.stringify(containerData),
-            statusCode: {
-                201: function () {
-                    $('.alert').text("Created container: " + containerName);
-                    reloadDataTable(3000);
-                },
-                503: function () {
-                    $('.alert').text("Could not create container: " + containerName);
-                }
-            }
-        });
-
-    });
-
-    getNumberOfNodes();
 });
 
 /**
@@ -149,7 +150,6 @@ function moveOrScale(currentObject, command) {
     $('#moveContainerModal').modal('show');
     $('#moveContainerId').val(id);
     $('#moveContainer').val(command);
-
 }
 
 $('#moveContainer').click(function () {
@@ -184,7 +184,7 @@ function postMoveOrScaleContainer(id, node, method) {
  * @example
  * var currentObject = [HTML OBJECT] //A TableRow for example.
  * var command  = "start"
- * startRequest(currentobject, command)
+ * startRequest(currentObject, command)
  */
 function startRequest(currentObject, command){
     var parentTableRow = currentObject.parents('tr');

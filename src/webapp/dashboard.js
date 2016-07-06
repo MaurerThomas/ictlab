@@ -5,7 +5,7 @@
 
 /**
  * Starting URL for all requests, based on the website the user opens.
- * @example {string} "http://192.168.1.199:8080"
+ * @example {string} "http://192.168.1.199:8080/ictlab/api"
  * @type {string}
  */
 const host = window.location.origin + "/ictlab/api" ;
@@ -70,7 +70,6 @@ $( "#myTable tbody" ).on( "click", "span", function() {
 
 /**
  * Show HTML modal where you can fill in details to create a new Container.
- * Set the number of nodes on this modal.
  */
 $('#newContainer').click(function () {
     $('#newContainerModal').modal('show');

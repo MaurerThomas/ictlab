@@ -17,10 +17,14 @@ public class FailOverTest {
     @Before
     public void before() throws Exception {
         failOver = new FailOver();
-        nodeManagerURL = Arrays.asList(new URL("http://145.24.222.224:8080/nodemanager/api/containers"),new URL("http://145.24.222.223:8080/nodemanager/api/containers"));
+        nodeManagerURL = Arrays.asList(new URL("http://145.24.222.224:8080/nodemanager/api/containers"),
+                new URL("http://145.24.222.223:8080/nodemanager/api/containers"));
     }
 
     @Test
+    /**
+     * Compare response code from FailOver and compare it to the Status.OK (200) error code. Should be equal.
+     */
     public void failOverTest() {
         assertEquals(Response.status(Response.Status.OK).build().getStatus(), failOver.getResponseFromWorkingHost(nodeManagerURL,"").getStatus());
     }

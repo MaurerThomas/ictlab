@@ -20,8 +20,7 @@ public class StartContainerTest {
 
     @Test(expected=FailToConnectException.class)
     public void verifyFailureResponseStartContainer() throws Exception {
-        UrlReader urlReader = new UrlReader();
         URL url = new URL("http://145.24.222.223:8080/nodemanager/api/containers/null/start");
-        urlReader.readFromUrl(url);
+        UrlReader.readFromUrl(url);
     }
 }

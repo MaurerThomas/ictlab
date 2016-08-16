@@ -18,14 +18,14 @@ abstract class Resource {
 
     private void constructUrl() throws MalformedURLException {
         if (nodeManagerURL == null) {
-            // nodeManagerURL = Arrays.asList(new URL(System.getenv("NODEMANAGER")));
+             //nodeManagerURL = Arrays.asList(new URL(System.getenv("NODEMANAGER")));
             // Testing URL
             nodeManagerURL = Arrays.asList(new URL("http://145.24.222.223:8080/nodemanager/api"));
             failOver = new FailOver();
         }
     }
 
-    Response getResponseFromHost(String command) {
+     Response getResponseFromHost(String command) {
         return failOver.getResponseFromWorkingHost(nodeManagerURL, command);
     }
 }

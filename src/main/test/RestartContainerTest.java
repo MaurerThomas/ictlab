@@ -24,8 +24,7 @@ public class RestartContainerTest {
 
     @Test(expected=FailToConnectException.class)
     public void verifyFailureResponseRestartContainer() throws Exception {
-        UrlReader urlReader = new UrlReader();
         URL url = new URL("http://145.24.222.223:8080/nodemanager/api/containers/null/restart");
-        urlReader.readFromUrl(url);
+        UrlReader.readFromUrl(url);
     }
 }

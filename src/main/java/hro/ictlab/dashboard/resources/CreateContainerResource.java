@@ -30,15 +30,15 @@ public class CreateContainerResource extends Resource {
     /**
      * Request to create a new container.
      * @param jsonRequest A JSON object containting information about a new container that looks like this:
-     *
-     *  {
-     *   "containerName": containerName,
-     *   "node": node,
-     *   "baseImage": baseImage,
-     *   "hostPort": hostPort,
-     *   "containerPort": containerPort
-     *   }
-     *
+     * <pre>
+     * {
+     *  "containerName": containerName,
+     *  "node": node,
+     *  "baseImage": baseImage,
+     *  "hostPort": hostPort,
+     *  "containerPort": containerPort
+     * }
+     * </pre>
      * @return HTTP status code: 201 for success or 503 for failure.
      */
     @POST

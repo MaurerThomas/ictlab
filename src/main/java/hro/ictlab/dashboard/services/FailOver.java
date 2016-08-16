@@ -22,10 +22,11 @@ public class FailOver {
      * @return HTTP status code: 200 for success or 503 for failure.
      */
     public Response getResponseFromWorkingHost(List<URL> url, String command) {
+        Logger logger = Logger.getLogger("myLogger");
         try {
-            return tryToConnectToUrl(url, command);
+           return tryToConnectToUrl(url, command);
         } catch (MalformedURLException | URISyntaxException | FailToConnectException e) {
-            logConnectionError(e);
+           logger.log(Level.SEVERE, "Could not connect to URL", e);
         }
         return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
     }
@@ -38,36 +39,16 @@ public class FailOver {
         return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
     }
 
-    private Response readUrl(URL workingHost, String command) throws MalformedURLException, URISyntaxException, FailToConnectException {
-        UrlReader urlReader = new UrlReader();
-        String output;
-        URL finalURL = addExtraPathToUrl(workingHost, command);
-        if (!command.isEmpty()) {
-            output = urlReader.readFromUrl(finalURL);
-        } else {
-            return Response.status(Response.Status.OK).build();
-        }
-        if (output != null) {
-            return Response.status(Response.Status.OK).entity(output).build();
-        }
-        return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
-    }
-
     private URL lookUpAllHosts(List<URL> hosts) throws FailToConnectException {
         for (URL host : hosts) {
-            if (pingHost(host)) {
+            if (checkForWorkingConnection(host)) {
                 return host;
             }
         }
         throw new FailToConnectException("All hosts are down.");
     }
 
-    private void logConnectionError(Exception e) {
-        Logger logger = Logger.getLogger("myLogger");
-        logger.log(Level.SEVERE, "Could not connect to URL", e);
-    }
-
-    private static boolean pingHost(URL host) {
+    private static boolean checkForWorkingConnection(URL host) {
         try {
             URLConnection connection = host.openConnection();
             connection.connect();
@@ -77,6 +58,20 @@ public class FailOver {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    private Response readUrl(URL workingHost, String command) throws MalformedURLException, URISyntaxException, FailToConnectException {
+        String output;
+        URL finalURL = addExtraPathToUrl(workingHost, command);
+        if (!command.isEmpty()) {
+            output = UrlReader.readFromUrl(finalURL);
+        } else {
+            return Response.status(Response.Status.OK).build();
+        }
+        if (output != null) {
+            return Response.status(Response.Status.OK).entity(output).build();
+        }
+        return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
     }
 
     private static URL addExtraPathToUrl(URL baseUrl, String command) throws URISyntaxException, MalformedURLException {

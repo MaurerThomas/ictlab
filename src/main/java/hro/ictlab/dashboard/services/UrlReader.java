@@ -10,15 +10,20 @@ import java.net.URLConnection;
 
 /**
  * This class is responsible for reading a URL and then send it back.
+ * If a class is declared final then its methods are automatically (effectively) final.
+ * This is because a final class cannot be subclassed, and thus its methods cannot be overridden (i.e., are effectively final).
  */
-public class UrlReader {
+public final class UrlReader {
+
+    private UrlReader(){}
+
     /**
      * Reads the URL.
      * @param url The URL to read.
      * @return A string containing the body of the response.
      * @throws FailToConnectException
      */
-    public String readFromUrl(URL url) throws FailToConnectException {
+    public static String readFromUrl(URL url) throws FailToConnectException {
         try {
             URLConnection urlConnection = url.openConnection();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
